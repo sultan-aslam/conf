@@ -1,0 +1,50 @@
+# Configuring webpack 4
+
+mkdir foldername && cd foldername
+npm init -y
+npm i react react-dom
+npm i -D webpack webpack-dev-server webpack-cli
+  webpack module:: which include all core webpack functionality
+  webpack-dev-server:: this development server automatically rerun webpack when our file is changed
+  webpack-cli:: enable running webpack from the command line
+
+package.json
+  "scripts": { "start": "webpack-dev-server --mode development",},
+
+on root
+  <!DOCTYPE html><html> <head> <title>My React Configuration Setup</title> </head> <body> <div id="root"></div> <script src="./dist/bundle.js"></script> </body></html>
+
+mkdir src && cd src && touch index.js
+create react Hello World component (class)
+npm run start (see the errors)
+
+
+# Configuring Babel 7
+
+npm i -D @babel/core @babel/preset-env \@babel/preset-react babel-loader
+  @babel/core is the main dependency that includes babel transform script.
+  @babel/preset-env is the default Babel preset used to transform ES6+ into valid ES5 code. Optionally configures browser polyfills automatically.
+  @babel/preset-react is used for transforming JSX and React class syntax into valid JavaScript code.
+  babel-loader is a webpack loader that hooks Babel into webpack. We will run Babel from webpack with this package.
+
+Create webpack file >> webpack.config.js
+  module.exports = {  entry: './src/index.js',  output: {    path: __dirname + '/dist',    publicPath: '/',    filename: 'bundle.js'  },  devServer: {    contentBase: './dist',  },  module: {    rules: [    {      test: /\.(js|jsx)$/,      exclude: /node_modules/,      use: ['babel-loader']    }    ]  },};
+
+create bablerc  >> touch .babelrc
+  {  "presets": [    "@babel/preset-env",    "@babel/preset-react"  ]}
+
+npm run start (it Works!!!)
+
+
+# ESLint
+
+npm i -D eslint eslint-loader babel-eslint eslint-config-react eslint-plugin-react
+  eslint is the core dependency for all functionalities, while eslint-loader enables us to hook eslint into webpack. Now since React used ES6+ syntax, we will add babel-eslint — a parser that enables eslint to lint all valid ES6+ codes.
+  eslint-config-react and eslint-plugin-react are both used to enable ESLint to use pre-made rules.
+
+touch .eslintrc
+  {  "parser": "babel-eslint",  "extends": "react",  "env": {    "browser": true,    "node": true  },  "settings": {    "react": {      "version": "detect"    }  }}
+
+
+# HtmlWebpackPlugin
+  npm install html-webpack-plugin -D
